@@ -1,0 +1,49 @@
+.app-container {
+  padding: 16px;
+}
+
+
+
+.app-layout {
+  display: flex;
+  gap: 24px;
+}
+.sections-size {
+  flex: 1;
+  border: 1px solid black;
+padding: 16px;
+min-height: 400px;
+font-size: 18px;
+}
+
+.header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  border: 1px solid black;
+  padding: 3px;
+    text-align: center;
+
+}
+
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+}
