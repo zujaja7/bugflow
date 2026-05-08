@@ -8,7 +8,7 @@
   display: flex;
   gap: 24px;
 }
-.sections-size {
+.bug-list-section {
   flex: 1;
   border: 1px solid black;
 padding: 16px;
@@ -16,7 +16,45 @@ min-height: 400px;
 font-size: 18px;
 }
 
-.header {
+.form-section {
+  flex: 1;
+  border: 1px solid black;
+padding: 16px;
+min-height: 400px;
+font-size: 18px;
+
+}
+
+.form-header {
+  font-size: 20px;
+  text-align: center;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.title-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.form-title {
+  font-size: 18px;
+  /* text-align: left; */
+}
+
+.bug-list-header {
+  font-size: 20px;
+  text-align: center;
+}
+
+.main-header {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
