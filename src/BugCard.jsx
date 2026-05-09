@@ -1,0 +1,25 @@
+function BugCard({
+  bugTitle,
+  bugSeverity,
+  bugStatus,
+  bugDescription,
+  lastUpdated,
+}) {
+  return (
+    <div className="issue-card">
+      <div className="issue-meta">
+        <span className="badge">{bugSeverity}</span>
+        <span className="badge">{bugStatus}</span>
+        <span className="updated-time">{lastUpdated}</span>
+      </div>
+      <h3 className="issue-title">{bugTitle}</h3>
+      <p className="issue-description">{bugDescription}</p>
+      <div className="issue-actions">
+        <button>Edit</button>
+        <button>Delete</button>
+      </div>
+    </div>
+  );
+}
+
+export default BugCard;
