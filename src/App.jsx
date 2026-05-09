@@ -79,7 +79,48 @@ function App() {
 </div>
 
         </div>
-        <div className='recent-issues-panel'>Recent issues</div>
+        <div className='recent-issues-panel'>
+
+        <h2 className="recent-issues-title">RECENT ISSUES</h2>
+
+  <div className="issue-card">
+    <div className="issue-meta">
+      <span className="badge severity-high">High</span>
+      <span className="badge status-open">Open</span>
+      <span className="updated-time">Updated 10:42 AM</span>
+    </div>
+
+    <h3 className="issue-title">Login button not responding</h3>
+    <p className="issue-description">
+      Submit becomes inactive after validation.
+    </p>
+
+    <div className="issue-actions">
+      <button>Edit</button>
+      <button>Delete</button>
+    </div>
+  </div>
+
+
+  <div className="issue-card">
+    <div className="issue-meta">
+      <span className="badge severity-medium">Medium</span>
+      <span className="badge status-in-progress">In Progress</span>
+      <span className="updated-time">Updated 04:27 PM</span>
+    </div>
+
+    <h3 className="issue-title">Overview Page not Mobile Responsive</h3>
+    <p className="issue-description">
+      The overview section is not mobile responsive.
+    </p>
+
+    <div className="issue-actions">
+      <button>Edit</button>
+      <button>Delete</button>
+    </div>
+  </div>
+
+</div>
       </div>
       </div>
     
