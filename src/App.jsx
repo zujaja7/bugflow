@@ -1,6 +1,8 @@
 import "./App.css";
+
 import BugCard from "./BugCard";
 import { useState } from "react";
+
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
@@ -20,6 +22,7 @@ function App() {
             placeholder="Search issues..."
             className="search-input"
           />
+
           <button
             className="add-bug-button"
             onClick={() => setIsModalOpen(true)}
@@ -89,7 +92,7 @@ function App() {
           </div>
         </div>
         <div className="recent-issues-panel">
-          Recent issues
+          <h2 className="recent-issues-title">RECENT ISSUES</h2>
           <BugCard
             bugTitle={"Login button not working"}
             bugSeverity={"High"}
