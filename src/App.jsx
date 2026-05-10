@@ -109,6 +109,93 @@ function App() {
           />
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <div className="modal-header">
+              <h2 className="Title">New Bug</h2>
+              <button onClick={() => setIsModalOpen(false)}>✕</button>
+            </div>
+            <div className="title-description">
+              <label>Title</label>
+              <input
+                type="text"
+                placeholder="Enter your Bug title"
+                className="title-input"
+              ></input>
+              <label>Description</label>
+              <textarea className="description-area"></textarea>
+            </div>
+            <div className="bug-properties">
+              <div className="property-field">
+                <label>Severity</label>
+                <select>
+                  <option value="" disabled selected hidden>
+                    Severity
+                  </option>
+                  <option value="Highest">Highest</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+              <div className="property-field">
+                <label>Priority</label>
+                <select>
+                  <option value="" disabled selected hidden>
+                    Priority
+                  </option>
+                  <option value="P1">P1</option>
+                  <option value="P2">P2</option>
+                  <option value="P3">P3</option>
+                  <option value="P4">P4</option>
+                </select>
+              </div>
+              <div className="property-field">
+                <label>Status</label>
+                <select>
+                  <option value="" disabled selected hidden>
+                    Status
+                  </option>
+                  <option value="New">New</option>
+                  <option value="Open">Open</option>
+                  <option value="Assigned">Assigned</option>
+                  <option value="Fixed">Fixed</option>
+                  <option value="Verified">Verified</option>
+                  <option value="Closed">Closed</option>
+                  <option value="Reopened">Reopened</option>
+                </select>
+              </div>
+
+              <div className="property-field">
+                <label>Estimate</label>
+                <select>
+                  <option value="" disabled selected hidden>
+                    Estimate
+                  </option>
+                  <option value="0.25 hr">Quarter hour</option>
+                  <option value="0.5 hr">Half an hour</option>
+                  <option value="1 hr">1 hour</option>
+                  <option value="2 hrs">2 hours</option>
+                  <option value="3 hrs">3 hours</option>
+                  <option value="4 hrs">4 hours</option>
+                  <option value="5 hrs">5 hours</option>
+                </select>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button className="save-bug-button">Save Bug</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
