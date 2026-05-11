@@ -4,18 +4,21 @@ function BugCard({
   bugStatus,
   bugDescription,
   lastUpdated,
+  bugPriority,
+  bugEstimate,
+  onEdit,
 }) {
   return (
     <div className="issue-card">
       <div className="issue-meta">
         <span className="badge">{bugSeverity}</span>
         <span className="badge">{bugStatus}</span>
-        <span className="updated-time">{lastUpdated}</span>
+        <span className="updated-time">Updated {lastUpdated}</span>
       </div>
       <h3 className="issue-title">{bugTitle}</h3>
       <p className="issue-description">{bugDescription}</p>
       <div className="issue-actions">
-        <button>Edit</button>
+        <button onClick={onEdit}>Edit</button>
         <button>Delete</button>
       </div>
     </div>
