@@ -13,28 +13,53 @@ function App() {
   const [status, setStatus] = useState("");
   const [estimate, setEstimate] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [editingBugId, setEditingBugId] = useState(null);
   const handleSaveBug = () => {
     if (!title || !description || !severity || !status) {
       setSubmitted(true);
       return;
     }
 
-    const newBug = {
-      id: Date.now(),
-      bugTitle: title,
-      bugDescription: description,
-      bugSeverity: severity,
-      bugPriority: priority,
-      bugStatus: status,
-      bugEstimate: estimate,
-      lastUpdated: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    setBugs([...bugs, newBug]);
+    if (editingBugId !== null) {
+      const updatedBugs = bugs.map((bug) => {
+        if (bug.id === editingBugId) {
+          return {
+            ...bug,
+            bugTitle: title,
+            bugDescription: description,
+            bugSeverity: severity,
+            bugPriority: priority,
+            bugStatus: status,
+            bugEstimate: estimate,
+            lastUpdated: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          };
+        }
+        return bug;
+      });
+      setBugs(updatedBugs);
+    } else {
+      const newBug = {
+        id: Date.now(),
+        bugTitle: title,
+        bugDescription: description,
+        bugSeverity: severity,
+        bugPriority: priority,
+        bugStatus: status,
+        bugEstimate: estimate,
+        lastUpdated: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+      setBugs([...bugs, newBug]);
+    }
+
     setIsModalOpen(false);
   };
+
   const handleNewBug = () => {
     setTitle("");
     setDescription("");
@@ -42,6 +67,18 @@ function App() {
     setPriority("");
     setStatus("");
     setEstimate("");
+    setSubmitted(false);
+    setIsModalOpen(true);
+    setEditingBugId(null);
+  };
+  const handleEditBug = (bug) => {
+    setEditingBugId(bug.id);
+    setTitle(bug.bugTitle);
+    setDescription(bug.bugDescription);
+    setSeverity(bug.bugSeverity);
+    setPriority(bug.bugPriority);
+    setStatus(bug.bugStatus);
+    setEstimate(bug.bugEstimate);
     setSubmitted(false);
     setIsModalOpen(true);
   };
@@ -139,7 +176,7 @@ function App() {
               bugStatus={bug.bugStatus}
               bugDescription={bug.bugDescription}
               lastUpdated={bug.lastUpdated}
-              onEdit={() => setIsModalOpen(true)}
+              onEdit={() => handleEditBug(bug)}
             />
           ))}
         </div>
@@ -266,5 +303,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
