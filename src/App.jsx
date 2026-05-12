@@ -5,6 +5,89 @@ import { useState } from "react";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bugs, setBugs] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [severity, setSeverity] = useState("");
+  const [priority, setPriority] = useState("");
+  const [status, setStatus] = useState("");
+  const [estimate, setEstimate] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [editingBugId, setEditingBugId] = useState(null);
+  const handleSaveBug = () => {
+    const now = new Date();
+    if (!title || !description || !severity || !status) {
+      setSubmitted(true);
+      return;
+    }
+
+    if (editingBugId !== null) {
+      const updatedBugs = bugs.map((bug) => {
+        if (bug.id === editingBugId) {
+          return {
+            ...bug,
+            bugTitle: title,
+            bugDescription: description,
+            bugSeverity: severity,
+            bugPriority: priority,
+            bugStatus: status,
+            bugEstimate: estimate,
+            lastUpdated: now.getTime(), // number for sorting
+            lastUpdatedDisplay: now.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          };
+        }
+        return bug;
+      });
+      setBugs(updatedBugs);
+    } else {
+      const newBug = {
+        id: Date.now(),
+        bugTitle: title,
+        bugDescription: description,
+        bugSeverity: severity,
+        bugPriority: priority,
+        bugStatus: status,
+        bugEstimate: estimate,
+        lastUpdated: now.getTime(),
+        lastUpdatedDisplay: now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+      setBugs([...bugs, newBug]);
+    }
+
+    setIsModalOpen(false);
+  };
+
+  const handleNewBug = () => {
+    setTitle("");
+    setDescription("");
+    setSeverity("");
+    setPriority("");
+    setStatus("");
+    setEstimate("");
+    setSubmitted(false);
+    setIsModalOpen(true);
+    setEditingBugId(null);
+  };
+  const handleEditBug = (bug) => {
+    setEditingBugId(bug.id);
+    setTitle(bug.bugTitle);
+    setDescription(bug.bugDescription);
+    setSeverity(bug.bugSeverity);
+    setPriority(bug.bugPriority);
+    setStatus(bug.bugStatus);
+    setEstimate(bug.bugEstimate);
+    setSubmitted(false);
+    setIsModalOpen(true);
+  };
+  const handleDeleteBug = (id) => {
+    setBugs(bugs.filter((bug) => bug.id !== id));
+  };
   return (
     <div className="app-container">
       {/*Header Section*/}
@@ -23,10 +106,7 @@ function App() {
             className="search-input"
           />
 
-          <button
-            className="add-bug-button"
-            onClick={() => setIsModalOpen(true)}
-          >
+          <button className="add-bug-button" onClick={handleNewBug}>
             + New Bug
           </button>
         </div>
@@ -93,20 +173,21 @@ function App() {
         </div>
         <div className="recent-issues-panel">
           <h2 className="recent-issues-title">RECENT ISSUES</h2>
-          <BugCard
-            bugTitle={"Login button not working"}
-            bugSeverity={"High"}
-            bugStatus={"Open"}
-            bugDescription={"Submit becomes inactive after validation."}
-            lastUpdated={"Updated 09:45 AM"}
-          />
-          <BugCard
-            bugTitle={"Overview Page not Mobile Responsive"}
-            bugSeverity={"Medium"}
-            bugStatus={"In Progress"}
-            bugDescription={"The overview section is not mobile responsive."}
-            lastUpdated={"Updated 04:25 PM"}
-          />
+
+          {bugs
+            .sort((a, b) => b.lastUpdated - a.lastUpdated)
+            .map((bug) => (
+              <BugCard
+                key={bug.id}
+                bugTitle={bug.bugTitle}
+                bugSeverity={bug.bugSeverity}
+                bugStatus={bug.bugStatus}
+                bugDescription={bug.bugDescription}
+                lastUpdatedDisplay={bug.lastUpdatedDisplay}
+                onEdit={() => handleEditBug(bug)}
+                onDelete={() => handleDeleteBug(bug.id)}
+              />
+            ))}
         </div>
       </div>
 
@@ -120,17 +201,32 @@ function App() {
             <div className="title-description">
               <label>Title</label>
               <input
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
                 type="text"
                 placeholder="Enter your Bug title"
                 className="title-input"
               ></input>
+              {submitted && !title && (
+                <p className="error">* Title is required</p>
+              )}
               <label>Description</label>
-              <textarea className="description-area"></textarea>
+              <textarea
+                className="description-area"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+              ></textarea>
+              {submitted && !description && (
+                <p className="error">* Description is required</p>
+              )}
             </div>
             <div className="bug-properties">
               <div className="property-field">
                 <label>Severity</label>
-                <select>
+                <select
+                  onChange={(e) => setSeverity(e.target.value)}
+                  value={severity}
+                >
                   <option value="" disabled selected hidden>
                     Severity
                   </option>
@@ -139,10 +235,16 @@ function App() {
                   <option value="Medium">Medium</option>
                   <option value="Low">Low</option>
                 </select>
+                {submitted && !severity && (
+                  <p className="error">* Severity is required</p>
+                )}
               </div>
               <div className="property-field">
                 <label>Priority</label>
-                <select>
+                <select
+                  onChange={(e) => setPriority(e.target.value)}
+                  value={priority}
+                >
                   <option value="" disabled selected hidden>
                     Priority
                   </option>
@@ -154,7 +256,10 @@ function App() {
               </div>
               <div className="property-field">
                 <label>Status</label>
-                <select>
+                <select
+                  onChange={(e) => setStatus(e.target.value)}
+                  value={status}
+                >
                   <option value="" disabled selected hidden>
                     Status
                   </option>
@@ -166,11 +271,17 @@ function App() {
                   <option value="Closed">Closed</option>
                   <option value="Reopened">Reopened</option>
                 </select>
+                {submitted && !status && (
+                  <p className="error">* Status is required</p>
+                )}
               </div>
 
               <div className="property-field">
                 <label>Estimate</label>
-                <select>
+                <select
+                  onChange={(e) => setEstimate(e.target.value)}
+                  value={estimate}
+                >
                   <option value="" disabled selected hidden>
                     Estimate
                   </option>
@@ -191,7 +302,9 @@ function App() {
               >
                 Cancel
               </button>
-              <button className="save-bug-button">Save Bug</button>
+              <button className="save-bug-button" onClick={handleSaveBug}>
+                Save Bug
+              </button>
             </div>
           </div>
         </div>
@@ -199,5 +312,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
