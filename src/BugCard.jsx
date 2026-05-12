@@ -3,7 +3,7 @@ function BugCard({
   bugSeverity,
   bugStatus,
   bugDescription,
-  lastUpdated,
+  lastUpdatedDisplay,
   bugPriority,
   bugEstimate,
   onEdit,
@@ -14,7 +14,7 @@ function BugCard({
       <div className="issue-meta">
         <span className="badge">{bugSeverity}</span>
         <span className="badge">{bugStatus}</span>
-        <span className="updated-time">Updated {lastUpdated}</span>
+        <span className="updated-time">Updated {lastUpdatedDisplay}</span>
       </div>
       <h3 className="issue-title">{bugTitle}</h3>
       <p className="issue-description">{bugDescription}</p>

@@ -15,6 +15,7 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
   const [editingBugId, setEditingBugId] = useState(null);
   const handleSaveBug = () => {
+    const now = new Date();
     if (!title || !description || !severity || !status) {
       setSubmitted(true);
       return;
@@ -31,7 +32,8 @@ function App() {
             bugPriority: priority,
             bugStatus: status,
             bugEstimate: estimate,
-            lastUpdated: new Date().toLocaleTimeString([], {
+            lastUpdated: now.getTime(), // number for sorting
+            lastUpdatedDisplay: now.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             }),
@@ -49,7 +51,8 @@ function App() {
         bugPriority: priority,
         bugStatus: status,
         bugEstimate: estimate,
-        lastUpdated: new Date().toLocaleTimeString([], {
+        lastUpdated: now.getTime(),
+        lastUpdatedDisplay: now.toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         }),
@@ -171,18 +174,20 @@ function App() {
         <div className="recent-issues-panel">
           <h2 className="recent-issues-title">RECENT ISSUES</h2>
 
-          {bugs.map((bug) => (
-            <BugCard
-              key={bug.id}
-              bugTitle={bug.bugTitle}
-              bugSeverity={bug.bugSeverity}
-              bugStatus={bug.bugStatus}
-              bugDescription={bug.bugDescription}
-              lastUpdated={bug.lastUpdated}
-              onEdit={() => handleEditBug(bug)}
-              onDelete={() => handleDeleteBug(bug.id)}
-            />
-          ))}
+          {bugs
+            .sort((a, b) => b.lastUpdated - a.lastUpdated)
+            .map((bug) => (
+              <BugCard
+                key={bug.id}
+                bugTitle={bug.bugTitle}
+                bugSeverity={bug.bugSeverity}
+                bugStatus={bug.bugStatus}
+                bugDescription={bug.bugDescription}
+                lastUpdatedDisplay={bug.lastUpdatedDisplay}
+                onEdit={() => handleEditBug(bug)}
+                onDelete={() => handleDeleteBug(bug.id)}
+              />
+            ))}
         </div>
       </div>
 
