@@ -1,11 +1,24 @@
 import "./App.css";
 
 import BugCard from "./BugCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [bugs, setBugs] = useState([]);
+  const [bugs, setBugs] = useState(() => {
+    const savedBugs = localStorage.getItem("bugs");
+
+    if (savedBugs) {
+      try {
+        return JSON.parse(savedBugs);
+      } catch (error) {
+        console.error("Failed to parse saved bugs:", error);
+        return [];
+      }
+    }
+
+    return [];
+  });
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [severity, setSeverity] = useState("");
@@ -14,6 +27,19 @@ function App() {
   const [estimate, setEstimate] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [editingBugId, setEditingBugId] = useState(null);
+  useEffect(() => {
+    localStorage.setItem("bugs", JSON.stringify(bugs));
+  }, [bugs]);
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setSeverity("");
+    setPriority("");
+    setStatus("");
+    setEstimate("");
+    setSubmitted(false);
+    setEditingBugId(null);
+  };
   const handleSaveBug = () => {
     const now = new Date();
     if (!title || !description || !severity || !status) {
@@ -61,18 +87,12 @@ function App() {
     }
 
     setIsModalOpen(false);
+    resetForm();
   };
 
   const handleNewBug = () => {
-    setTitle("");
-    setDescription("");
-    setSeverity("");
-    setPriority("");
-    setStatus("");
-    setEstimate("");
-    setSubmitted(false);
+    resetForm();
     setIsModalOpen(true);
-    setEditingBugId(null);
   };
   const handleEditBug = (bug) => {
     setEditingBugId(bug.id);
@@ -88,6 +108,11 @@ function App() {
   const handleDeleteBug = (id) => {
     setBugs(bugs.filter((bug) => bug.id !== id));
   };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    resetForm();
+  };
   return (
     <div className="app-container">
       {/*Header Section*/}
@@ -95,7 +120,7 @@ function App() {
         <div className="brand-area">
           <h1 className="title">BugFlow</h1>
           <h2 className="subtitle">
-            Track issues , organize fixes, ship cleaner releases
+            Track issues, organize fixes, ship cleaner releases
           </h2>
         </div>
 
@@ -174,7 +199,7 @@ function App() {
         <div className="recent-issues-panel">
           <h2 className="recent-issues-title">RECENT ISSUES</h2>
 
-          {bugs
+          {[...bugs]
             .sort((a, b) => b.lastUpdated - a.lastUpdated)
             .map((bug) => (
               <BugCard
@@ -195,8 +220,10 @@ function App() {
         <div className="modal-overlay">
           <div className="modal-box">
             <div className="modal-header">
-              <h2 className="Title">New Bug</h2>
-              <button onClick={() => setIsModalOpen(false)}>✕</button>
+              <h2 className="Title">
+                {editingBugId === null ? "New Bug" : "Edit Bug"}
+              </h2>
+              <button onClick={closeModal}>✕</button>
             </div>
             <div className="title-description">
               <label>Title</label>
@@ -206,7 +233,7 @@ function App() {
                 type="text"
                 placeholder="Enter your Bug title"
                 className="title-input"
-              ></input>
+              />
               {submitted && !title && (
                 <p className="error">* Title is required</p>
               )}
@@ -227,7 +254,7 @@ function App() {
                   onChange={(e) => setSeverity(e.target.value)}
                   value={severity}
                 >
-                  <option value="" disabled selected hidden>
+                  <option value="" disabled hidden>
                     Severity
                   </option>
                   <option value="Highest">Highest</option>
@@ -245,7 +272,7 @@ function App() {
                   onChange={(e) => setPriority(e.target.value)}
                   value={priority}
                 >
-                  <option value="" disabled selected hidden>
+                  <option value="" disabled hidden>
                     Priority
                   </option>
                   <option value="P1">P1</option>
@@ -260,7 +287,7 @@ function App() {
                   onChange={(e) => setStatus(e.target.value)}
                   value={status}
                 >
-                  <option value="" disabled selected hidden>
+                  <option value="" disabled hidden>
                     Status
                   </option>
                   <option value="New">New</option>
@@ -282,7 +309,7 @@ function App() {
                   onChange={(e) => setEstimate(e.target.value)}
                   value={estimate}
                 >
-                  <option value="" disabled selected hidden>
+                  <option value="" disabled hidden>
                     Estimate
                   </option>
                   <option value="0.25 hr">Quarter hour</option>
@@ -296,14 +323,11 @@ function App() {
               </div>
             </div>
             <div className="modal-actions">
-              <button
-                className="cancel-button"
-                onClick={() => setIsModalOpen(false)}
-              >
+              <button className="cancel-button" onClick={closeModal}>
                 Cancel
               </button>
               <button className="save-bug-button" onClick={handleSaveBug}>
-                Save Bug
+                {editingBugId === null ? "Save Bug" : "Update Bug"}
               </button>
             </div>
           </div>
