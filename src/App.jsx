@@ -82,6 +82,9 @@ function App() {
     setSubmitted(false);
     setIsModalOpen(true);
   };
+  const handleDeleteBug = (id) => {
+    setBugs(bugs.filter((bug) => bug.id !== id));
+  };
   return (
     <div className="app-container">
       {/*Header Section*/}
@@ -177,6 +180,7 @@ function App() {
               bugDescription={bug.bugDescription}
               lastUpdated={bug.lastUpdated}
               onEdit={() => handleEditBug(bug)}
+              onDelete={() => handleDeleteBug(bug.id)}
             />
           ))}
         </div>

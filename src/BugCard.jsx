@@ -7,6 +7,7 @@ function BugCard({
   bugPriority,
   bugEstimate,
   onEdit,
+  onDelete,
 }) {
   return (
     <div className="issue-card">
@@ -19,7 +20,7 @@ function BugCard({
       <p className="issue-description">{bugDescription}</p>
       <div className="issue-actions">
         <button onClick={onEdit}>Edit</button>
-        <button>Delete</button>
+        <button onClick={onDelete}>Delete</button>
       </div>
     </div>
   );
