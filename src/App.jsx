@@ -27,6 +27,11 @@ function App() {
   const [estimate, setEstimate] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [editingBugId, setEditingBugId] = useState(null);
+  const [searchText, setSearchText] = useState("");
+  const [severityFilter, setSeverityFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [priorityFilter, setPriorityFilter] = useState("All");
+
   useEffect(() => {
     localStorage.setItem("bugs", JSON.stringify(bugs));
   }, [bugs]);
@@ -113,6 +118,21 @@ function App() {
     setIsModalOpen(false);
     resetForm();
   };
+
+  const filteredBugs = bugs.filter((bug) => {
+    const title = bug.bugTitle.toLowerCase();
+    const description = bug.bugDescription.toLowerCase();
+    const search = searchText.toLowerCase();
+    const matchesSearch =
+      title.includes(search) || description.includes(search);
+    const matchesSeverity =
+      severityFilter === "All" || bug.bugSeverity === severityFilter;
+    const matchesStatus =
+      statusFilter === "All" || bug.bugStatus === statusFilter;
+    const matchesPriority =
+      priorityFilter === "All" || bug.bugPriority === priorityFilter;
+    return matchesSearch && matchesSeverity && matchesStatus && matchesPriority;
+  });
   return (
     <div className="app-container">
       {/*Header Section*/}
@@ -129,6 +149,8 @@ function App() {
             type="search"
             placeholder="Search issues..."
             className="search-input"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
 
           <button className="add-bug-button" onClick={handleNewBug}>
@@ -144,7 +166,12 @@ function App() {
           <h3>Filters</h3>
           <div className="filter-field">
             <label htmlFor="severity"> Severity </label>
-            <select id="severity" className="dropdown">
+            <select
+              id="severity"
+              className="dropdown"
+              value={severityFilter}
+              onChange={(e) => setSeverityFilter(e.target.value)}
+            >
               <option value="All">All</option>
               <option value="Highest">Highest</option>
               <option value="High">High</option>
@@ -155,7 +182,12 @@ function App() {
 
           <div className="filter-field">
             <label htmlFor="priority"> Priority </label>
-            <select id="priority" className="dropdown">
+            <select
+              id="priority"
+              className="dropdown"
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+            >
               <option value="All">All</option>
               <option value="P1">P1</option>
               <option value="P2">P2</option>
@@ -166,7 +198,12 @@ function App() {
 
           <div className="filter-field">
             <label htmlFor="status"> Status </label>
-            <select id="status" className="dropdown">
+            <select
+              id="status"
+              className="dropdown"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
               <option value="All">All</option>
               <option value="New">New</option>
               <option value="Open">Open</option>
@@ -199,7 +236,7 @@ function App() {
         <div className="recent-issues-panel">
           <h2 className="recent-issues-title">RECENT ISSUES</h2>
 
-          {[...bugs]
+          {[...filteredBugs]
             .sort((a, b) => b.lastUpdated - a.lastUpdated)
             .map((bug) => (
               <BugCard
