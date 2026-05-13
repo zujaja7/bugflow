@@ -31,6 +31,19 @@ function App() {
   const [severityFilter, setSeverityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const openCount = bugs.filter((bug) => bug.bugStatus === "Open").length;
+  const totalBugs = bugs.length;
+  const lastUpdatedBug = [...bugs].sort(
+    (a, b) => b.lastUpdated - a.lastUpdated,
+  )[0];
+
+  const lastUpdatedText = lastUpdatedBug
+    ? lastUpdatedBug.lastUpdatedDisplay
+    : "No updates yet";
+  const assignedCount = bugs.filter(
+    (bug) => bug.bugStatus === "Assigned",
+  ).length;
+  const fixedCount = bugs.filter((bug) => bug.bugStatus === "Fixed").length;
 
   useEffect(() => {
     localStorage.setItem("bugs", JSON.stringify(bugs));
@@ -216,21 +229,25 @@ function App() {
           </div>
           <h3>Quick stats</h3>
           <div className="stat-row">
+            <span>Total</span>
+            <span>{totalBugs}</span>
+          </div>
+          <div className="stat-row">
             <span>Open</span>
-            <span>8</span>
+            <span>{openCount}</span>
           </div>
           <div className="stat-row">
             <span>Assigned</span>
-            <span>3</span>
+            <span>{assignedCount}</span>
           </div>
           <div className="stat-row">
             <span>Fixed</span>
-            <span>12</span>
+            <span>{fixedCount}</span>
           </div>
 
           <div className="last-updated">
             <h3>Last Updated</h3>
-            <p className="last-updated-value">Today, 10:42 AM</p>
+            <p className="last-updated-value">{lastUpdatedText}</p>
           </div>
         </div>
         <div className="recent-issues-panel">
