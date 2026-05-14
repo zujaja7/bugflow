@@ -4,19 +4,21 @@ function BugCard({
   bugStatus,
   bugDescription,
   lastUpdatedDisplay,
-  bugPriority,
-  bugEstimate,
   onEdit,
   onDelete,
 }) {
   return (
     <div className="issue-card">
       <div className="issue-meta">
-        <span className={`badge severity-${bugSeverity.toLowerCase()}`}>
+        <span
+          className={`badge severity-${bugSeverity.toLowerCase().replaceAll(" ", "-")}`}
+        >
           {bugSeverity}
         </span>
 
-        <span className={`badge status-${bugStatus.toLowerCase()}`}>
+        <span
+          className={`badge status-${bugStatus.toLowerCase().replaceAll(" ", "-")}`}
+        >
           {bugStatus}
         </span>
         <span className="updated-time">Updated {lastUpdatedDisplay}</span>
@@ -24,11 +26,19 @@ function BugCard({
       <h3 className="issue-title">{bugTitle}</h3>
       <p className="issue-description">{bugDescription}</p>
       <div className="issue-actions">
-        <button className="icon-button edit-button" onClick={onEdit}>
+        <button
+          className="icon-button edit-button"
+          onClick={onEdit}
+          aria-label="Edit bug"
+        >
           ✎
         </button>
 
-        <button className="icon-button delete-button" onClick={onDelete}>
+        <button
+          className="icon-button delete-button"
+          onClick={onDelete}
+          aria-label="Delete bug"
+        >
           🗑
         </button>
       </div>

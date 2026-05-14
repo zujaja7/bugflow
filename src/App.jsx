@@ -45,9 +45,44 @@ function App() {
     (a, b) => b.lastUpdated - a.lastUpdated,
   )[0];
 
-  const lastUpdatedText = lastUpdatedBug
-    ? lastUpdatedBug.lastUpdatedDisplay
-    : "No updates yet";
+  const formatLastUpdated = (timestamp) => {
+    if (!timestamp) {
+      return "No updates yet";
+    }
+
+    const updatedDate = new Date(timestamp);
+    const today = new Date();
+
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const isToday = updatedDate.toDateString() === today.toDateString();
+    const isYesterday = updatedDate.toDateString() === yesterday.toDateString();
+
+    const time = updatedDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    if (isToday) {
+      return `Today, ${time}`;
+    }
+
+    if (isYesterday) {
+      return `Yesterday, ${time}`;
+    }
+
+    const date = updatedDate.toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
+    return `${date}, ${time}`;
+  };
+
+  const lastUpdatedText = formatLastUpdated(lastUpdatedBug?.lastUpdated);
+
   const assignedCount = bugs.filter(
     (bug) => bug.bugStatus === "Assigned",
   ).length;
@@ -274,7 +309,10 @@ function App() {
 
           <div className="last-updated">
             <h3>Last Updated</h3>
-            <p className="last-updated-value">{lastUpdatedText}</p>
+            <p className="last-updated-value">
+              <span className="clock-icon">◷</span>
+              {lastUpdatedText}
+            </p>
           </div>
         </div>
         <div className="recent-issues-panel">
