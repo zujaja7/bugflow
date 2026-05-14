@@ -32,6 +32,14 @@ function App() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const openCount = bugs.filter((bug) => bug.bugStatus === "Open").length;
+  const newCount = bugs.filter((bug) => bug.bugStatus === "New").length;
+  const verifiedCount = bugs.filter(
+    (bug) => bug.bugStatus === "Verified",
+  ).length;
+  const closedCount = bugs.filter((bug) => bug.bugStatus === "Closed").length;
+  const reopenedCount = bugs.filter(
+    (bug) => bug.bugStatus === "Reopened",
+  ).length;
   const totalBugs = bugs.length;
   const lastUpdatedBug = [...bugs].sort(
     (a, b) => b.lastUpdated - a.lastUpdated,
@@ -158,13 +166,16 @@ function App() {
         </div>
 
         <div className="actions-area">
-          <input
-            type="search"
-            placeholder="Search issues..."
-            className="search-input"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+          <div className="search-box">
+            <span className="search-icon">⌕</span>
+            <input
+              type="search"
+              placeholder="Search issues..."
+              className="search-input"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
 
           <button className="add-bug-button" onClick={handleNewBug}>
             + New Bug
@@ -229,8 +240,12 @@ function App() {
           </div>
           <h3>Quick stats</h3>
           <div className="stat-row">
-            <span>Total</span>
+            <span>Total Bugs</span>
             <span>{totalBugs}</span>
+          </div>
+          <div className="stat-row">
+            <span>New</span>
+            <span>{newCount}</span>
           </div>
           <div className="stat-row">
             <span>Open</span>
@@ -243,6 +258,18 @@ function App() {
           <div className="stat-row">
             <span>Fixed</span>
             <span>{fixedCount}</span>
+          </div>
+          <div className="stat-row">
+            <span>Verified</span>
+            <span>{verifiedCount}</span>
+          </div>
+          <div className="stat-row">
+            <span>Closed</span>
+            <span>{closedCount}</span>
+          </div>
+          <div className="stat-row">
+            <span>Reopened</span>
+            <span>{reopenedCount}</span>
           </div>
 
           <div className="last-updated">
@@ -309,7 +336,7 @@ function App() {
                   value={severity}
                 >
                   <option value="" disabled hidden>
-                    Severity
+                    Select Severity
                   </option>
                   <option value="Highest">Highest</option>
                   <option value="High">High</option>
@@ -327,7 +354,7 @@ function App() {
                   value={priority}
                 >
                   <option value="" disabled hidden>
-                    Priority
+                    Select Priority
                   </option>
                   <option value="P1">P1</option>
                   <option value="P2">P2</option>
@@ -342,7 +369,7 @@ function App() {
                   value={status}
                 >
                   <option value="" disabled hidden>
-                    Status
+                    Select Status
                   </option>
                   <option value="New">New</option>
                   <option value="Open">Open</option>
@@ -364,7 +391,7 @@ function App() {
                   value={estimate}
                 >
                   <option value="" disabled hidden>
-                    Estimate
+                    Select Estimate
                   </option>
                   <option value="0.25 hr">Quarter hour</option>
                   <option value="0.5 hr">Half an hour</option>
